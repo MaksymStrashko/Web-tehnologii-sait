@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея Рецептів</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            gap: 20px;
+        }
+
+        .recipe-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .recipe-card .content {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .recipe-card .content h3 {
+            margin-bottom: 10px;
+        }
+
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .gallery .hidden {
+            filter: grayscale(100%);
+            display: none;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 730px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tablet styles */
+        @media (min-width: 731px) and (max-width: 1200px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1201px) {
+            .gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .recipe-card {
+                flex-direction: row;
+            }
+
+            .recipe-card img {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+            }
+
+            .recipe-card .content {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Галерея Рецептів</h1>
+
+    <div class="filter">
+        <div class="filter-group">
+            <label for="calories">Фільтр за калоріями:</label>
+            <select id="calories">
+                <option value="all">Всі</option>
+                <option value="low">Менше 200</option>
+                <option value="medium">200-400</option>
+                <option value="high">Більше 400</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="type">Фільтр за видами виробів:</label>
+            <select id="type">
+                <option value="all">Всі</option>
+                <option value="cake">Торти</option>
+                <option value="pie">Пироги</option>
+                <option value="bread">Хліб</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="gallery">
+        <div class="recipe-card" data-type="cake" data-calories="high">
+            <img src="https://filizhanka.top/wp-content/uploads/2023/11/08727392a69bc5d4f479f648dd86f7fa.jpg" alt="Торт Шоколадний">
+            <div class="content">
+                <h3>Шоколадний Торт</h3>
+                <p>Смачний і ніжний шоколадний торт з насиченим кремом.</p>
+            </div>
+        </div>
+        <div class="recipe-card" data-type="pie" data-calories="medium">
+            <img src="https://pmg.ua/static/content/thumbs/646x480/7/f0/v2p5qw---c323x240x50px50p-up--e83650fb88f15a3a102c41f5168f8f07.jpg" alt="Яблучний Пиріг">
+            <div class="content">
+                <h3>Яблучний Пиріг</h3>
+                <p>Класичний яблучний пиріг з хрусткою скоринкою і солодкою начинкою.</p>
+            </div>
+        </div>
+        <div class="recipe-card" data-type="cake" data-calories="medium">
+            <img src="https://i.obozrevatel.com/food/recipemain/2019/2/8/999470-880x544.jpg?size=636x424" alt="Чізкейк">
+            <div class="content">
+                <h3>Чізкейк</h3>
+                <p>Ніжний чізкейк з хрусткою основою з печива.</p>
+            </div>
+        </div>
+        <div class="recipe-card" data-type="bread" data-calories="low">
+            <img src="https://images.unian.net/photos/2024_11/thumb_files/1000_545_1732707834-9359.jpg?1" alt="Банановий Хліб">
+            <div class="content">
+                <h3>Банановий Хліб</h3>
+                <p>М'який і ароматний банановий хліб з нотками кориці.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Галерея Рецептів. Всі права захищені.
+    </footer>
+
+    <script>
+        const typeFilter = document.getElementById('type');
+        const caloriesFilter = document.getElementById('calories');
+        const cards = document.querySelectorAll('.recipe-card');
+
+        function filterCards() {
+            const selectedType = typeFilter.value;
+            const selectedCalories = caloriesFilter.value;
+
+            cards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const cardCalories = card.getAttribute('data-calories');
+
+                const typeMatch = selectedType === 'all' || cardType === selectedType;
+                const caloriesMatch = 
+                    selectedCalories === 'all' || 
+                    (selectedCalories === 'low' && cardCalories === 'low') ||
+                    (selectedCalories === 'medium' && cardCalories === 'medium') ||
+                    (selectedCalories === 'high' && cardCalories === 'high');
+
+                if (typeMatch && caloriesMatch) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        typeFilter.addEventListener('change', filterCards);
+        caloriesFilter.addEventListener('change', filterCards);
+    </script>
+</body>
+</html>
